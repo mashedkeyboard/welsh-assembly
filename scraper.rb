@@ -8,6 +8,8 @@ require 'pry'
 require 'open-uri/cached'
 OpenURI::Cache.cache_path = '.cache'
 
+@ConstituencyRegion = {}
+
 class String
   def tidy
     self.gsub(/[[:space:]]+/, ' ').strip
@@ -35,19 +37,25 @@ def scrape_region(url)
   end
 end
 
-def scrape_person(url, region)
+def scrape_person(url, region=nil)
   noko = noko_for(url)
   sidebar = noko.css('div.mgUserSideBar')
   userbody = noko.css('div.mgUserBody')
 
   constituency = sidebar.xpath('.//span[contains(.,"Constituency:")]/following-sibling::text()').text.tidy
   if constituency.to_s.empty?
-    # Make sure that the region for the person is the same 
     area = sidebar.xpath('.//span[contains(.,"Region:")]/following-sibling::text()').text.tidy
-    raise "#{area} != #{region}" unless region == area
-    area = region
-    area_id = 'ocd-division/country:gb-wls/region:%s' % region.slugify
+    area = 'North Wales' if url.to_s.include? 'UID=407' # No longer on page
+    area_id = 'ocd-division/country:gb-wls/region:%s' % area.slugify 
   else
+    # Constituency Member Pages don't have the Region that constituency is in
+    # So if we got here from a Region page, cache what Region that was
+    # Otherwise (e.g. for historic AMs), fetch the region from that cache
+    if region
+      @ConstituencyRegion[constituency] = region
+    else 
+      region = @ConstituencyRegion[constituency]
+    end
     area = constituency
     area_id = 'ocd-division/country:gb-wls/region:%s/constituency:%s' % [region.slugify, constituency.slugify]
   end
@@ -82,4 +90,9 @@ end
 (1..5).each do |region_id|
   scrape_region 'http://www.assembly.wales/en/memhome/Pages/membersearchresults.aspx?region=%s' % region_id
 end
+
+%w(103 407 542).each do |historic|
+  scrape_person('http://www.senedd.assemblywales.org/mgUserInfo.aspx?UID=%s' % historic)
+end
+
 
