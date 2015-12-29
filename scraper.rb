@@ -16,6 +16,10 @@ class String
   def slugify
     self.downcase.gsub(' ','_')
   end
+
+  def to_date
+    Date.parse(self).to_s rescue nil
+  end
 end
 
 def noko_for(url)
@@ -69,7 +73,9 @@ def scrape_person(url, region)
     data[:other_name] = matched.captures[1]
   end
 
-  # puts data
+  # Dates of most recent term
+  data[:start_date], data[:end_date] = noko.xpath('.//h2[contains(.,"Term")]/following-sibling::ul[1]/li').last.text.split(' - ').map { |s| s.to_s.to_date } 
+
   ScraperWiki.save_sqlite([:id, :term, :party], data)
 end
 
