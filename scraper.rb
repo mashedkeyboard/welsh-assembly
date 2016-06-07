@@ -61,7 +61,7 @@ def scrape_person(url, region=nil)
   end
   
   data = { 
-    id: url.to_s[/UID=(\d+)/, 1],
+    id: url.to_s[/mid=(\d+)/, 1],
     name: noko.css('div.text h1').text.tidy.sub(/ AM$/,''),
     role: sidebar.xpath('.//span[contains(.,"Title:")]/following-sibling::text()').text.tidy,
     party: sidebar.xpath('.//span[contains(.,"Party:")]/following-sibling::text()').text.tidy,
@@ -72,7 +72,7 @@ def scrape_person(url, region=nil)
     website: userbody.css('a[title*=Website]/@href').text.tidy,
     facebook: userbody.css('a[title*=Facebook]/@href').text.tidy,
     twitter: userbody.css('a[title*=Twitter]/@href').text.tidy,
-    term: 4,
+    term: 5,
     source: url.to_s,
   }
   data[:image] = URI.join(url, data[:image]).to_s unless data[:image].to_s.empty?
@@ -89,10 +89,6 @@ end
 
 (1..5).each do |region_id|
   scrape_region 'http://www.assembly.wales/en/memhome/Pages/membersearchresults.aspx?region=%s' % region_id
-end
-
-%w(103 407 542).each do |historic|
-  scrape_person('http://www.senedd.assemblywales.org/mgUserInfo.aspx?UID=%s' % historic)
 end
 
 
