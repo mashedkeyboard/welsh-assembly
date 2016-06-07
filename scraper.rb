@@ -82,7 +82,9 @@ def scrape_person(url, region=nil)
   end
 
   # Dates of most recent term
-  data[:start_date], data[:end_date] = noko.xpath('.//h2[contains(.,"Term")]/following-sibling::ul[1]/li').last.text.split(' - ').map { |s| s.to_s.to_date } 
+  if (term_dates = noko.xpath('.//h2[contains(.,"Term")]/following-sibling::ul[1]/li')).any?
+    data[:start_date], data[:end_date] = term_dates.last.text.split(' - ').map { |s| s.to_s.to_date } 
+  end
 
   ScraperWiki.save_sqlite([:id, :term, :party], data)
 end
