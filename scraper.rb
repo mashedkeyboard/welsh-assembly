@@ -75,6 +75,12 @@ def scrape_person(url, region=nil)
     term: 5,
     source: url.to_s,
   }
+
+  if data[:name].to_s.empty?
+    warn "No data in #{url}"
+    return
+  end
+
   data[:image] = URI.join(url, data[:image]).to_s unless data[:image].to_s.empty?
   if matched = data[:name].match(/(.*) \((.*)\)/)
     data[:name] = matched.captures[0]
