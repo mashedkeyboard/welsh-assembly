@@ -14,4 +14,4 @@ gem "nokogiri"
 gem "open-uri-cached"
 gem "fuzzy_match"
 gem 'yajl-ruby', require: 'yajl'
-
+gem 'scraped_page_archive'
