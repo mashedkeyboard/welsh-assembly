@@ -9,11 +9,7 @@ ruby '2.0.0'
 
 gem 'scraperwiki', github: 'openaustralia/scraperwiki-ruby',
                    branch: 'morph_defaults'
-gem 'execjs'
 gem 'pry'
-gem 'colorize'
 gem 'nokogiri'
 gem 'open-uri-cached'
-gem 'fuzzy_match'
-gem 'yajl-ruby', require: 'yajl'
 gem 'scraped_page_archive'
