@@ -1,9 +1,11 @@
 #!/bin/env ruby
 # encoding: utf-8
 
-require 'scraperwiki'
 require 'nokogiri'
 require 'pry'
+require 'scraped'
+require 'scraperwiki'
+
 # require 'open-uri/cached'
 # OpenURI::Cache.cache_path = '.cache'
 require 'scraped_page_archive/open-uri'
@@ -28,12 +30,25 @@ def noko_for(url)
   Nokogiri::HTML(open(url).read)
 end
 
+class RegionPage < Scraped::HTML
+  field :region do
+    noko.css('h1').text.split(':').last.tidy
+  end
+
+  field :members do
+    noko.css('div#genericListing h2').map do |h2|
+      {
+        name: h2.text,
+        link: URI.join(url, h2.css('a/@href').text).to_s,
+      }
+    end
+  end
+end
 
 def scrape_region(url)
-  noko = noko_for(url)
-  region = noko.css('h1').text.split(':').last.tidy
-  noko.css('div#genericListing h2 a/@href').each do |href|
-    scrape_person(URI.join(url, href.text), region)
+  page = RegionPage.new(response: Scraped::Request.new(url: url).response)
+  page.members.each do |mem|
+    scrape_person(mem[:link], page.region)
   end
 end
 
