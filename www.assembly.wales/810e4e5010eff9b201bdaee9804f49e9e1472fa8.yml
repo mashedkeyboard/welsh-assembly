@@ -9,7 +9,7 @@ request:
     Accept-Encoding:
     - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
     Accept:
-    - '*/*'
+    - "*/*"
     User-Agent:
     - Ruby
 response:
@@ -32,9 +32,9 @@ response:
     X-Sharepointhealthscore:
     - '0'
     Sprequestguid:
-    - 0428c09d-6f90-8003-f721-1cc18633fac3
+    - '0428c09d-6f90-8003-f721-1cc18633fac3'
     Request-Id:
-    - 0428c09d-6f90-8003-f721-1cc18633fac3
+    - '0428c09d-6f90-8003-f721-1cc18633fac3'
     Sprequestduration:
     - '776'
     Spiislatency:
