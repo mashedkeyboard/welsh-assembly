@@ -18,36 +18,28 @@ response:
     message: OK
   headers:
     Cache-Control:
-    - private, max-age=0
+    - private
+    Transfer-Encoding:
+    - chunked
     Content-Type:
     - text/html; charset=utf-8
-    Expires:
-    - Sat, 04 Mar 2017 23:45:12 GMT
-    Last-Modified:
-    - Sun, 19 Mar 2017 23:45:12 GMT
     Vary:
     - Accept-Encoding
     Server:
     - Microsoft-IIS/8.0
-    X-Sharepointhealthscore:
+    Sharepointerror:
     - '0'
     Sprequestguid:
-    - 2bb2df9d-efaf-8003-58eb-b1c1dc9244e2
+    - d033e09d-bf0c-8003-f721-14a1876afaa1
     Request-Id:
-    - 2bb2df9d-efaf-8003-58eb-b1c1dc9244e2
-    Sprequestduration:
-    - '704'
-    Spiislatency:
-    - '1'
+    - d033e09d-bf0c-8003-f721-14a1876afaa1
     X-Content-Type-Options:
     - nosniff
     X-Ms-Invokeapp:
     - 1; RequireReadOnly
     Date:
-    - Sun, 19 Mar 2017 23:45:13 GMT
-    Content-Length:
-    - '22314'
+    - Tue, 21 Mar 2017 13:31:21 GMT
   body:
     encoding: ASCII-8BIT
   http_version: 
-recorded_at: Sun, 19 Mar 2017 23:45:14 GMT
+recorded_at: Tue, 21 Mar 2017 13:31:21 GMT
