@@ -22,9 +22,9 @@ response:
     Content-Type:
     - text/html; charset=utf-8
     Expires:
-    - Mon, 27 Nov 2017 16:28:22 GMT
+    - Tue, 28 Nov 2017 11:25:36 GMT
     Last-Modified:
-    - Tue, 12 Dec 2017 16:28:22 GMT
+    - Wed, 13 Dec 2017 11:25:36 GMT
     Vary:
     - Accept-Encoding
     Server:
@@ -32,13 +32,13 @@ response:
     X-Sharepointhealthscore:
     - '0'
     Sprequestguid:
-    - b1db359e-6f89-8003-f721-16a35f9ed5b3
+    - c41c369e-ff3d-8003-58eb-b0490441769b
     Request-Id:
-    - b1db359e-6f89-8003-f721-16a35f9ed5b3
+    - c41c369e-ff3d-8003-58eb-b0490441769b
     Sprequestduration:
-    - '1063'
+    - '767'
     Spiislatency:
-    - '0'
+    - '1'
     X-Content-Type-Options:
     - nosniff
     X-Ms-Invokeapp:
@@ -46,10 +46,10 @@ response:
     X-Frame-Options:
     - SAMEORIGIN
     Date:
-    - Tue, 12 Dec 2017 16:28:22 GMT
+    - Wed, 13 Dec 2017 11:25:36 GMT
     Content-Length:
-    - '22815'
+    - '22817'
   body:
     encoding: ASCII-8BIT
   http_version: 
-recorded_at: Tue, 12 Dec 2017 16:28:23 GMT
+recorded_at: Wed, 13 Dec 2017 11:25:37 GMT
