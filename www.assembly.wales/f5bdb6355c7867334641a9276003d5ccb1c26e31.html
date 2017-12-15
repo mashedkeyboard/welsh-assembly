@@ -126,65 +126,61 @@
 
         
             <script type="text/javascript">
+
                 var mobileWidth = 599;
                 var transitionedToMobile = false;
                 var currentLang = "en";
+                var displayModeCookieName = "nafwDisplayModeIsDesktop";
 
                 var currentPageUrl = window.location.pathname;
                 currentLang = currentPageUrl.substring(1, 3);
 
+                $(document).on("click", "a.responsiveAction", function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $(".topMenu2016").prop("style", "");
+                    if (GetIsDesktopMode()) {
+                        SetIsDesktopMode(false);
+                        ShowMobile();
+                    } else {
+                        SetIsDesktopMode(true);
+                        ShowDesktop();
+                    }
+                });
+                $(window).resize(function () {
+                    OnWidthChange();
+                });
+
+                function SetIsDesktopMode(value) {
+                    if (getCookie("nafwWebsiteCookieAcceptance") != null) {
+                        addCookie(displayModeCookieName, encodeURIComponent(value ? "true" : "false"));
+                    }
+                }
+
+                function GetIsDesktopMode() {
+                    var isInDesktop = getCookie(displayModeCookieName);
+                    return isInDesktop == null ? false : isInDesktop.toLowerCase().replace('here', '') == "true";
+                }
+
                 $(function () {
-                    if (GetIEVersion() > 7 || GetIEVersion() == -1) {
-                        InitLocalStorage();
+                    var browserVersion = GetIEVersion();
+                    if (browserVersion > 7 || browserVersion == -1) {
+                        if (!GetIsDesktopMode()) {
+                            SetIsDesktopMode(false);
+                        }
                         ToggleModeByLSPreference();
 
                         OnWidthChange();
-                        $(window).resize(function () {
-                            OnWidthChange();
-                        });
 
-                        BindResponsiveActionButton();
                     }
                 });
-
-                function BindResponsiveActionButton() {
-                    $("a.responsiveAction").unbind("click").click(function (e) {
-                        e.preventDefault();
-                        $(".topMenu2016").attr("style", "");
-                        if (localStorage.getItem("IsDesktopMode") === "true") {
-                            localStorage.setItem("IsDesktopMode", "false");
-                            ShowMobile();
-                        } else {
-                            localStorage.setItem("IsDesktopMode", "true");
-                            ShowDesktop();
-                        }
-                    });
-                }
-
-                function GetIEVersion() {
-                    var rv = -1; // Return value assumes failure.
-                    if (navigator.appName == 'Microsoft Internet Explorer') {
-                        var re = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
-                        if (re.exec(navigator.userAgent) != null) {
-                            rv = parseFloat(RegExp.$1);
-                        }
-                    }
-                    return rv;
-                }
-
-                function InitLocalStorage() {
-                    if (localStorage.getItem("IsDesktopMode") == null) {
-                        localStorage.setItem("IsDesktopMode", "false");
-                    }
-                }
 
                 function OnWidthChange() {
                     var width = $(window).outerWidth();
                     if (width < (mobileWidth - 20)) {
                         if (!transitionedToMobile) {
                             $("a.responsiveAction").show();
-                            BindResponsiveActionButton();
-                            if (localStorage.getItem("IsDesktopMode") === "true") {
+                            if (GetIsDesktopMode()) {
                                 ShowDesktop();
                             } else {
                                 ShowMobile();
@@ -199,14 +195,14 @@
                 }
 
                 function ToggleModeByLSPreference() {
-                    //var width = $(window).outerWidth();
-                    //if (width < (mobileWidth - 20)) {
-                        if (localStorage.getItem("IsDesktopMode") === "true") {
+                    var width = $(window).outerWidth();
+                    if (width < (mobileWidth - 20)) {
+                        if (GetIsDesktopMode()) {
                             ShowDesktop();
                         } else {
                             ShowMobile();
                         }
-                    //}
+                    }
                 }
 
                 function ShowDesktop() {
@@ -220,7 +216,6 @@
                     while ($("#mobileStyleSheet").length > 0) {
                         $("#mobileStyleSheet").remove();
                     }
-
 
                     SetStateToDesktop();
                     setTimeout(function () {
@@ -244,6 +239,17 @@
                     }, 500);
 
                 }
+
+                function addCookie(key, value) {
+                    var expires = new Date();
+                    expires.setTime(expires.getTime() + (364 * 24 * 60 * 60 * 1000));
+                    document.cookie = key + '=' + value + ';expires=' + expires.toUTCString() + "; path=/";
+                }
+
+                function getCookie(key) {
+                    var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+                    return keyValue ? keyValue[2] : null;
+                }
             </script>
         <meta property="WFEIdentifier" content="WFE1" /></head>
 
@@ -259,7 +265,7 @@
 <input type="hidden" name="MSOGallery_SelectedLibrary" id="MSOGallery_SelectedLibrary" value="" />
 <input type="hidden" name="MSOGallery_FilterString" id="MSOGallery_FilterString" value="" />
 <input type="hidden" name="MSOTlPn_Button" id="MSOTlPn_Button" value="none" />
-<input type="hidden" name="__REQUESTDIGEST" id="__REQUESTDIGEST" value="0x9E8DB25F960B27974D595D2B6BF77F643EB889937FAF673470206B07FC64B105CBA1433183506CDFEEE9D2D2F4F458E1204132775004C64CD12AE174FA1AE48B,14 Dec 2017 13:41:10 -0000" />
+<input type="hidden" name="__REQUESTDIGEST" id="__REQUESTDIGEST" value="0xD48A082C7985B3FF6431D16A9EAC4C450C09F96344EBD16B30BFB9AAB1A6C6A3A6F8D7CBFEC7EA5CB4FDEA0FC34FB725CF494ABD28D8EF6F2A11DF88EDAF6076,15 Dec 2017 14:45:12 -0000" />
 <input type="hidden" name="MSOSPWebPartManager_DisplayModeName" id="MSOSPWebPartManager_DisplayModeName" value="Browse" />
 <input type="hidden" name="MSOSPWebPartManager_ExitingDesignMode" id="MSOSPWebPartManager_ExitingDesignMode" value="false" />
 <input type="hidden" name="MSOWebPartPage_Shared" id="MSOWebPartPage_Shared" value="" />
@@ -283,7 +289,7 @@ var g_wsaQoSDataPoints = [];
 var g_wsaLCID = 1033;
 var g_wsaListTemplateId = 850;
 var g_wsaSiteTemplateId = 'BLANKINTERNET#0';
-var _fV4UI=true;var _spPageContextInfo = {webServerRelativeUrl: "\u002fen\u002fmemhome", webAbsoluteUrl: "http:\u002f\u002fwww.assembly.wales\u002fen\u002fmemhome", siteAbsoluteUrl: "http:\u002f\u002fwww.assembly.wales", serverRequestPath: "\u002fen\u002fmemhome\u002fPages\u002fMemberProfile.aspx", layoutsUrl: "_layouts\u002f15", webTitle: "Assembly Members", webTemplate: "53", tenantAppVersion: "0", webLogoUrl: "\u002fStyle Library\u002fImages\u002f2011logo.gif", webLanguage: 1033, currentLanguage: 1033, currentUICultureName: "en-US", currentCultureName: "en-GB", clientServerTimeDelta: new Date("2017-12-14T13:41:10.4132839Z") - new Date(), siteClientTag: "18$$15.0.4569.1000", crossDomainPhotosEnabled:false, webUIVersion:15, webPermMasks:{High:0,Low:196673},pageListId:"{f308fe2b-4d1a-4224-b774-8e5a946cd44b}",pageItemId:15, pagePersonalizationScope:1, alertsEnabled:true, siteServerRelativeUrl: "\u002f", allowSilverlightPrompt:'True',"themedCssFolderUrl" : "/_catalogs/theme/Themed/1E734978","themedImageFileNames" : {"spcommon.png" : "spcommon-B35BB0A9.themedpng?ctag=264","ellipsis.11x11x32.png" : "ellipsis.11x11x32-2F01F47D.themedpng?ctag=264","O365BrandSuite.95x30x32.png" : "O365BrandSuite.95x30x32-C212E2FD.themedpng?ctag=264","socialcommon.png" : "socialcommon-6F3394A9.themedpng?ctag=264","spnav.png" : "spnav-230C537D.themedpng?ctag=264"}};document.onreadystatechange=fnRemoveAllStatus; function fnRemoveAllStatus(){removeAllStatus(true)};//]]>
+var _fV4UI=true;var _spPageContextInfo = {webServerRelativeUrl: "\u002fen\u002fmemhome", webAbsoluteUrl: "http:\u002f\u002fwww.assembly.wales\u002fen\u002fmemhome", siteAbsoluteUrl: "http:\u002f\u002fwww.assembly.wales", serverRequestPath: "\u002fen\u002fmemhome\u002fPages\u002fMemberProfile.aspx", layoutsUrl: "_layouts\u002f15", webTitle: "Assembly Members", webTemplate: "53", tenantAppVersion: "0", webLogoUrl: "\u002fStyle Library\u002fImages\u002f2011logo.gif", webLanguage: 1033, currentLanguage: 1033, currentUICultureName: "en-US", currentCultureName: "en-GB", clientServerTimeDelta: new Date("2017-12-15T14:45:12.0828329Z") - new Date(), siteClientTag: "18$$15.0.4569.1000", crossDomainPhotosEnabled:false, webUIVersion:15, webPermMasks:{High:0,Low:196673},pageListId:"{f308fe2b-4d1a-4224-b774-8e5a946cd44b}",pageItemId:15, pagePersonalizationScope:1, alertsEnabled:true, siteServerRelativeUrl: "\u002f", allowSilverlightPrompt:'True',"themedCssFolderUrl" : "/_catalogs/theme/Themed/1E734978","themedImageFileNames" : {"spcommon.png" : "spcommon-B35BB0A9.themedpng?ctag=265","ellipsis.11x11x32.png" : "ellipsis.11x11x32-2F01F47D.themedpng?ctag=265","O365BrandSuite.95x30x32.png" : "O365BrandSuite.95x30x32-C212E2FD.themedpng?ctag=265","socialcommon.png" : "socialcommon-6F3394A9.themedpng?ctag=265","spnav.png" : "spnav-230C537D.themedpng?ctag=265"}};document.onreadystatechange=fnRemoveAllStatus; function fnRemoveAllStatus(){removeAllStatus(true)};//]]>
 </script>
 
 <script src="/_layouts/15/blank.js?rev=ZaOXZEobVwykPO9g8hq%2F8A%3D%3D" type="text/javascript"></script>
@@ -603,7 +609,7 @@ var _fV4UI=true;var _spPageContextInfo = {webServerRelativeUrl: "\u002fen\u002fm
 
  <h2 class="mgSectionTitle">More information about this Assembly Member</h2> 
 <ul class="mgBulletList">
-						<li><a href="http&#58;//senedd.assembly.wales/mgRofI.aspx?UID=175&amp;FID=-1&amp;HPID=1010151882" title="Link to my register of interests">Register of interests</a></li>
+						<li><a href="http&#58;//senedd.assembly.wales/mgRofI.aspx?UID=175&amp;FID=-1&amp;HPID=1010157628" title="Link to my register of interests">Register of interests</a></li>
 
 </ul>
 </div>
