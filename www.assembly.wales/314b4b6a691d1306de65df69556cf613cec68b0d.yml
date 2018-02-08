@@ -1,0 +1,55 @@
+---
+request:
+  method: get
+  uri: http://www.assembly.wales/en/memhome/Pages/MemberProfile.aspx?mid=6571
+  body:
+    encoding: US-ASCII
+    string: ''
+  headers:
+    Accept-Encoding:
+    - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+    Accept:
+    - "*/*"
+    User-Agent:
+    - Ruby
+response:
+  status:
+    code: 200
+    message: OK
+  headers:
+    Cache-Control:
+    - private, max-age=0
+    Content-Type:
+    - text/html; charset=utf-8
+    Expires:
+    - Wed, 24 Jan 2018 11:29:42 GMT
+    Last-Modified:
+    - Thu, 08 Feb 2018 11:29:42 GMT
+    Vary:
+    - Accept-Encoding
+    Server:
+    - Microsoft-IIS/8.0
+    X-Sharepointhealthscore:
+    - '0'
+    Sprequestguid:
+    - a875489e-9f30-8003-f721-1a88faa5d10d
+    Request-Id:
+    - a875489e-9f30-8003-f721-1a88faa5d10d
+    Sprequestduration:
+    - '802'
+    Spiislatency:
+    - '0'
+    X-Content-Type-Options:
+    - nosniff
+    X-Ms-Invokeapp:
+    - 1; RequireReadOnly
+    X-Frame-Options:
+    - SAMEORIGIN
+    Date:
+    - Thu, 08 Feb 2018 11:29:43 GMT
+    Content-Length:
+    - '21559'
+  body:
+    encoding: ASCII-8BIT
+  http_version: 
+recorded_at: Thu, 08 Feb 2018 11:29:44 GMT
