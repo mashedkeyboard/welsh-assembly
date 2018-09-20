@@ -110,6 +110,7 @@ def scrape_person(url, region=nil)
   ScraperWiki.save_sqlite([:id, :term, :party], data)
 end
 
+ScraperWiki.sqliteexecute('DROP TABLE data') rescue nil
 (1..5).each do |region_id|
   scrape_region 'http://www.assembly.wales/en/memhome/Pages/membersearchresults.aspx?region=%s' % region_id
 end
