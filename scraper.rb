@@ -17,7 +17,7 @@ class String
   end
 
   def slugify
-    self.downcase.gsub(' ','_')
+    self.downcase.gsub(' ', '_')
   end
 
   def to_date
@@ -27,17 +27,18 @@ end
 
 def parse_csv(csv_data)
   csv_data.each do |member|
+
     constituency = member[:Constituency]
     if constituency.to_s.empty? || constituency.to_s.strip == "-"
       area = member[:Region]
-      area_id = 'ocd-division/country:gb-wls/region:%s' % area.slugify 
+      area_id = 'ocd-division/country:gb-wls/region:%s' % area.slugify
     else
       region = member[:Region]
       area = constituency
       area_id = 'ocd-division/country:gb-wls/region:%s/constituency:%s' % [region.slugify, constituency.slugify]
     end
 
-    data = { 
+    data = {
       name: member[:Name],
       party: member[:Party],
       area_id: area_id,
@@ -58,16 +59,16 @@ def parse_csv(csv_data)
       data[:other_name] = matched.captures[1]
     end
 
-#     # Dates of most recent term
-#     if (term_dates = noko.xpath('.//h2[contains(.,"Term")]/following-sibling::ul[1]/li')).any?
-#       last_term = term_dates.last.text.split(' - ').map { |s| s.to_s.to_date } 
-#       data[:start_date], data[:end_date] = last_term if last_term.first > '2016-05-01'
-#     end
+    #     # Dates of most recent term
+    #     if (term_dates = noko.xpath('.//h2[contains(.,"Term")]/following-sibling::ul[1]/li')).any?
+    #       last_term = term_dates.last.text.split(' - ').map { |s| s.to_s.to_date }
+    #       data[:start_date], data[:end_date] = last_term if last_term.first > '2016-05-01'
+    #     end
 
     ScraperWiki.save_sqlite([:email, :term, :party], data)
   end
 end
 
 ScraperWiki.sqliteexecute('DROP TABLE data') rescue nil
-csv_data = CSV.readlines(open('https://senedd.wales/Umbraco/Api/Committee/DownloadCommitteeMembersCsv?committeeId=355743&cultureInfo=en-GB'), headers: true, encoding:'iso-8859-1:utf-8')
+csv_data = CSV.readlines(open('https://senedd.wales/Umbraco/Api/Committee/DownloadCommitteeMembersCsv?committeeId=355743&cultureInfo=en-GB'), headers: true, encoding: 'iso-8859-1:utf-8', header_converters: :symbol)
 parse_csv csv_data

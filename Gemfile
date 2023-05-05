@@ -2,11 +2,10 @@
 
 source 'https://rubygems.org'
 
-ruby '2.3.3'
+ruby '2.5.3'
 
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}.git" }
 
-gem 'nokogiri'
 gem 'open-uri-cached'
 gem 'pry'
 gem 'rake'
