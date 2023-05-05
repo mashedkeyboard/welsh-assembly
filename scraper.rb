@@ -1,16 +1,18 @@
 #!/bin/env ruby
 # encoding: utf-8
 
-require 'csv'
+require 'rexml/document'
 require 'pry'
+require 'uri'
 require 'scraped'
 require 'scraperwiki'
+
+include REXML
 
 require 'open-uri/cached'
 OpenURI::Cache.cache_path = '.cache'
 
-@ConstituencyRegion = {}
-url = "https://senedd.wales/Umbraco/Api/Committee/DownloadCommitteeMembersCsv?committeeId=355743&cultureInfo=en-GB"
+url = 'https://business.senedd.wales/mgwebservice.asmx/GetCouncillorsByWard'
 
 class String
   def tidy
@@ -26,49 +28,52 @@ class String
   end
 end
 
-def parse_csv(csv_data)
-  csv_data.each do |member|
-    constituency = member[:constituency]
-    if constituency.to_s.empty? || constituency.to_s.strip == "-"
-      area = member[:region]
-      area_id = 'ocd-division/country:gb-wls/region:%s' % area.slugify
-    else
-      region = member[:region]
-      area = constituency
-      area_id = 'ocd-division/country:gb-wls/region:%s/constituency:%s' % [region.slugify, constituency.slugify]
+def parse_xml(doc)
+  doc.get_elements('//ward').each do |ward|
+    constituency = ward.get_text('//wardtitle').to_s
+
+    ward.get_elements('//councillors/councillor').each do |member|
+      if constituency.to_s.empty? || constituency.to_s.strip == 'No Ward'
+        area = member.get_text('//districttitle').to_s
+        area_id = 'ocd-division/country:gb-wls/region:%s' % area.slugify
+      else
+        region = '-'
+        area = constituency
+        area_id = 'ocd-division/country:gb-wls/region:%s/constituency:%s' % [region.slugify, constituency.slugify]
+      end
+
+      data = {
+        id: member.get_text('//councillorid').to_s,
+        name: member.get_text('//fullusername').to_s,
+        party: member.get_text('//politicalpartytitle').to_s,
+        area_id: area_id,
+        area: area,
+        email: member.get_text('//workaddress/email').to_s,
+        image: member.get_text('//photobigurl').to_s,
+        term: 6
+      }
+
+      if data[:name].to_s.empty?
+        warn 'No data for found rep'
+        return
+      end
+
+      if matched = data[:name].match(/(.*) \((.*)\)/)
+        data[:name] = matched.captures[0]
+        data[:other_name] = matched.captures[1]
+      end
+
+      #     # Dates of most recent term
+      #     if (term_dates = noko.xpath('.//h2[contains(.,"Term")]/following-sibling::ul[1]/li')).any?
+      #       last_term = term_dates.last.text.split(' - ').map { |s| s.to_s.to_date }
+      #       data[:start_date], data[:end_date] = last_term if last_term.first > '2016-05-01'
+      #     end
+
+      ScraperWiki.save_sqlite([:id, :term, :party], data)
     end
-
-    data = {
-      id: member[:email_address], # no other unique reference given
-      name: member[:name],
-      party: member[:party],
-      area_id: area_id,
-      area: area,
-      email: member[:email_address],
-      term: 6
-    }
-
-    if data[:name].to_s.empty?
-      warn "No data for found rep"
-      return
-    end
-
-    data[:image] = URI.join(url, data[:image]).to_s unless data[:image].to_s.empty?
-    if matched = data[:name].match(/(.*) \((.*)\)/)
-      data[:name] = matched.captures[0]
-      data[:other_name] = matched.captures[1]
-    end
-
-    #     # Dates of most recent term
-    #     if (term_dates = noko.xpath('.//h2[contains(.,"Term")]/following-sibling::ul[1]/li')).any?
-    #       last_term = term_dates.last.text.split(' - ').map { |s| s.to_s.to_date }
-    #       data[:start_date], data[:end_date] = last_term if last_term.first > '2016-05-01'
-    #     end
-
-    ScraperWiki.save_sqlite([:id, :term, :party], data)
   end
 end
 
 ScraperWiki.sqliteexecute('DROP TABLE data') rescue nil
-csv_data = CSV.readlines(open(url), headers: true, encoding: 'iso-8859-1:utf-8', header_converters: :symbol)
-parse_csv csv_data
+doc = Document.new open(url)
+parse_xml doc
