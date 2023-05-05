@@ -39,6 +39,7 @@ def parse_csv(csv_data)
     end
 
     data = {
+      id: member[:email_address], # no other unique reference given
       name: member[:name],
       party: member[:party],
       area_id: area_id,
@@ -64,7 +65,7 @@ def parse_csv(csv_data)
     #       data[:start_date], data[:end_date] = last_term if last_term.first > '2016-05-01'
     #     end
 
-    ScraperWiki.save_sqlite([:email, :term, :party], data)
+    ScraperWiki.save_sqlite([:id, :term, :party], data)
   end
 end
 
