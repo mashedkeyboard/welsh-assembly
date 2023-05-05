@@ -27,23 +27,22 @@ end
 
 def parse_csv(csv_data)
   csv_data.each do |member|
-
-    constituency = member[:Constituency]
+    constituency = member[:constituency]
     if constituency.to_s.empty? || constituency.to_s.strip == "-"
-      area = member[:Region]
+      area = member[:region]
       area_id = 'ocd-division/country:gb-wls/region:%s' % area.slugify
     else
-      region = member[:Region]
+      region = member[:region]
       area = constituency
       area_id = 'ocd-division/country:gb-wls/region:%s/constituency:%s' % [region.slugify, constituency.slugify]
     end
 
     data = {
-      name: member[:Name],
-      party: member[:Party],
+      name: member[:name],
+      party: member[:party],
       area_id: area_id,
       area: area,
-      email: member[:"Email address"],
+      email: member[:email_address],
       term: 6,
       source: url.to_s,
     }
