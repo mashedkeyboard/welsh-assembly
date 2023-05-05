@@ -44,8 +44,7 @@ def parse_csv(csv_data)
       area_id: area_id,
       area: area,
       email: member[:email_address],
-      term: 6,
-      source: url.to_s,
+      term: 6
     }
 
     if data[:name].to_s.empty?
