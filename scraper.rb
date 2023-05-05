@@ -69,5 +69,5 @@ def parse_csv(csv_data)
 end
 
 ScraperWiki.sqliteexecute('DROP TABLE data') rescue nil
-csv_data = CSV.readlines(open('https://senedd.wales/Umbraco/Api/Committee/DownloadCommitteeMembersCsv?committeeId=355743&cultureInfo=en-GB'), headers: true)
+csv_data = CSV.readlines(open('https://senedd.wales/Umbraco/Api/Committee/DownloadCommitteeMembersCsv?committeeId=355743&cultureInfo=en-GB'), headers: true, encoding:'iso-8859-1:utf-8')
 parse_csv csv_data
