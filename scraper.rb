@@ -30,11 +30,11 @@ end
 
 def parse_xml(doc)
   doc.get_elements('//ward').each do |ward|
-    constituency = ward.get_text('//wardtitle').to_s
+    constituency = ward.get_text('wardtitle').to_s
 
-    ward.get_elements('//councillors/councillor').each do |member|
+    ward.get_elements('councillors/councillor').each do |member|
       if constituency.to_s.empty? || constituency.to_s.strip == 'No Ward'
-        area = member.get_text('//districttitle').to_s
+        area = member.get_text('districttitle').to_s
         area_id = 'ocd-division/country:gb-wls/region:%s' % area.slugify
       else
         region = '-'
@@ -43,13 +43,13 @@ def parse_xml(doc)
       end
 
       data = {
-        id: member.get_text('//councillorid').to_s,
-        name: member.get_text('//fullusername').to_s,
-        party: member.get_text('//politicalpartytitle').to_s,
+        id: member.get_text('councillorid').to_s,
+        name: member.get_text('fullusername').to_s,
+        party: member.get_text('politicalpartytitle').to_s,
         area_id: area_id,
         area: area,
-        email: member.get_text('//workaddress/email').to_s,
-        image: member.get_text('//photobigurl').to_s,
+        email: member.get_text('workaddress/email').to_s,
+        image: member.get_text('photobigurl').to_s,
         term: 6
       }
 
