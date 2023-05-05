@@ -1,7 +1,7 @@
 #!/bin/env ruby
 # encoding: utf-8
 
-require 'nokogiri'
+require 'csv'
 require 'pry'
 require 'scraped'
 require 'scraperwiki'
