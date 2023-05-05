@@ -10,6 +10,7 @@ require 'open-uri/cached'
 OpenURI::Cache.cache_path = '.cache'
 
 @ConstituencyRegion = {}
+url = "https://senedd.wales/Umbraco/Api/Committee/DownloadCommitteeMembersCsv?committeeId=355743&cultureInfo=en-GB"
 
 class String
   def tidy
@@ -48,7 +49,7 @@ def parse_csv(csv_data)
     }
 
     if data[:name].to_s.empty?
-      warn "No data in #{url}"
+      warn "No data for found rep"
       return
     end
 
@@ -69,5 +70,5 @@ def parse_csv(csv_data)
 end
 
 ScraperWiki.sqliteexecute('DROP TABLE data') rescue nil
-csv_data = CSV.readlines(open('https://senedd.wales/Umbraco/Api/Committee/DownloadCommitteeMembersCsv?committeeId=355743&cultureInfo=en-GB'), headers: true, encoding: 'iso-8859-1:utf-8', header_converters: :symbol)
+csv_data = CSV.readlines(open(url), headers: true, encoding: 'iso-8859-1:utf-8', header_converters: :symbol)
 parse_csv csv_data
